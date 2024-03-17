@@ -2,6 +2,6 @@ package enums
 
 type GenericResponse struct {
 	Success bool        `json:"success"`
-	Data    interface{} `json:"data"`
 	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
 }
