@@ -17,7 +17,8 @@ type DbInstance struct {
 	Db *gorm.DB
 }
 
-var DBSql DbInstance
+// var DBSql DbInstance
+var DBSql *gorm.DB
 
 func ConnectToMySql() {
 	err := godotenv.Load()
@@ -55,5 +56,5 @@ func ConnectToMySql() {
 		fmt.Println("Migrations disabled, skipping...")
 	}
 
-	DBSql = DbInstance{Db: db}
+	DBSql = db
 }

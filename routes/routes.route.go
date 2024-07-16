@@ -7,8 +7,9 @@ import (
 )
 
 func ProductGroupRoutes(routers fiber.Router) {
-	r := routers.Group("product-group")
+	r := routers.Group("product-type")
 	r.Post("/", productGroup.CreateGroup)
 	r.Get("/", productGroup.FetchGroup)
-	// r.Put("/", productGroup.UpdateGroup)
+	r.Put("/", productGroup.UpdateGroup)
+	r.Post("/create-in-mongo", productGroup.CreateInMongo)
 }
