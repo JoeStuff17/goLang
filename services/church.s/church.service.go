@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"gorm.io/datatypes"
 	"main.go/database"
@@ -19,46 +20,27 @@ func CreateChurch(payload sql.Churches, localUser dto.ReqUser) dto.GenericRespon
 	newUUID := uuid.New().String()
 	payload.Uuid = newUUID
 
-	createdBy := dto.CreatedBy{
-		Id:   localUser.ID,
-		Name: localUser.Name,
-		Role: localUser.Role,
-	}
+	createdBy := dto.CreatedBy{Id: localUser.ID, Name: localUser.Name, Role: localUser.Role}
 	createdByJSON, err := json.Marshal(createdBy)
 	if err != nil {
-		return dto.GenericResponse{
-			Success: false,
-			Data:    err.Error(),
-			Message: "Failed to serialize CreatedBy",
-		}
+		return dto.GenericResponse{Success: false, Data: err.Error(), Message: "Failed to serialize CreatedBy", StatusCode: fiber.StatusUnprocessableEntity}
 	}
 	payload.CreatedBy = datatypes.JSON(createdByJSON)
 
 	dbWithRetry := helpers.NewDBWithRetry(database.DBSql)
 	err = dbWithRetry.CreateWithDynamicGenerator(&payload, func() error {
-		// regenerate church code inside retry
 		newCode, codeErr := GenerateNewChurchCode()
 		if codeErr != nil {
 			return codeErr
 		}
-		// here update the pointer payload correctly
 		payload.ChurchCode = newCode
 		return nil
 	})
 
 	if err != nil {
-		return dto.GenericResponse{
-			Success: false,
-			Data:    err.Error(),
-			Message: "Failed to create church",
-		}
+		return dto.GenericResponse{Success: false, Data: err.Error(), Message: "Failed to create church", StatusCode: fiber.StatusOK}
 	}
-
-	return dto.GenericResponse{
-		Success: true,
-		Message: "Church created successfully",
-		Data:    payload,
-	}
+	return dto.GenericResponse{Success: true, Message: "Church created successfully", Data: payload, StatusCode: fiber.StatusOK}
 }
 
 func GenerateNewChurchCode() (string, error) {

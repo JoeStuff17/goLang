@@ -18,10 +18,6 @@ func CreateChurch(c *fiber.Ctx) error {
 		})
 	}
 	localUser := c.Locals("user").(dto.ReqUser)
-	data := church_s.CreateChurch(payload, localUser)
-	if data.Success {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{"success": true, "message": "Church created Successfully", "data": data.Data})
-	} else {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"success": false, "data": data.Data})
-	}
+	res := church_s.CreateChurch(payload, localUser)
+	return c.Status(res.StatusCode).JSON(fiber.Map{"success": res.Success, "message": res.Message, "data": res.Data})
 }
