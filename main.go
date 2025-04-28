@@ -29,6 +29,8 @@ func main() {
 
 	// api := app.Group("/api/" + version)
 	api := app.Group("/api/")
-	routes.ProductGroupRoutes(api)
+	routes.UserRoutes(api)
+	routes.AdminRoutes(api)
+	routes.ChurchRoutes(api)
 	log.Fatal(app.Listen(":" + port))
 }

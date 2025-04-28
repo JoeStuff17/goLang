@@ -1,4 +1,4 @@
-package interface_model
+package dto
 
 type UpdatePayload struct {
 	ID   uint                    `json:"id"`

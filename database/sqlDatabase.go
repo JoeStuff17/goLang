@@ -6,11 +6,11 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	"main.go/models"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-	sql "main.go/models"
 )
 
 type DbInstance struct {
@@ -45,7 +45,9 @@ func ConnectToMySql() {
 	if os.Getenv("DB_MIGRATE") == "true" {
 		fmt.Println("Running Migrations")
 		err := db.AutoMigrate(
-			&sql.ProductGroup{},
+			&models.Users{},
+			&models.Admins{},
+			&models.Churches{},
 		)
 		if err != nil {
 			fmt.Println("DB Migrations error, aborting...")
