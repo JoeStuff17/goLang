@@ -9,6 +9,14 @@ type GenericResponse struct {
 	StatusCode int         `json:"statusCode"`
 }
 
+type ResWithCount struct {
+	Success    bool        `json:"success"`
+	Message    string      `json:"message"`
+	Data       interface{} `json:"data"`
+	Count      int         `json:"dcount"`
+	StatusCode int         `json:"statusCode"`
+}
+
 type ReqUser struct {
 	ID   uint           `json:"id"`
 	Name string         `json:"name"`

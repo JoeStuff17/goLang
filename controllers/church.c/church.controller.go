@@ -9,15 +9,20 @@ import (
 )
 
 func CreateChurch(c *fiber.Ctx) error {
-	var payload models.Churches
-	if err := c.BodyParser(&payload); err != nil {
+	payload := new(models.Churches)
+	if err := c.BodyParser(payload); err != nil {
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
 			"success": false,
-			"message": "Not able to process the request",
-			"data":    err,
+			"message": "Not able to process the request 2",
+			"data":    err.Error(),
 		})
 	}
 	localUser := c.Locals("user").(dto.ReqUser)
 	res := church_s.CreateChurch(payload, localUser)
 	return c.Status(res.StatusCode).JSON(fiber.Map{"success": res.Success, "message": res.Message, "data": res.Data})
+}
+
+func FetchChurches(c *fiber.Ctx) error {
+	res := church_s.GetAllChurches()
+	return c.Status(res.StatusCode).JSON(fiber.Map{"success": res.Success, "message": res.Message, "data": res.Data, "count": res.Count})
 }
