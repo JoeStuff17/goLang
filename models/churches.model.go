@@ -31,6 +31,7 @@ type Churches struct {
 	InauguratedAt  *time.Time      `gorm:"column:inaugurated_at; type:DATETIME; not null" json:"inaugurated_at"`
 	DenominationId int16           `gorm:"column:denomination_id; type:uint" json:"denomination_id"`
 	ClientIds      *datatypes.JSON `gorm:"column:client_ids; type:text" json:"client_ids"`
+	AdminRoles     datatypes.JSON  `gorm:"column:admin_roles; type:text" json:"admin_roles"`
 	CreatedBy      datatypes.JSON  `gorm:"column:created_by; type:text" json:"created_by"`
 	IsActive       bool            `gorm:"column:is_active; default:true" json:"is_active"`
 	gorm.Model

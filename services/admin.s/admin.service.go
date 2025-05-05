@@ -39,6 +39,9 @@ func CreateAdmin(payload models.Admins, localUser dto.ReqUser) dto.GenericRespon
 			UUID:         newUUID,
 		}
 		err := database.DBSql.Model(&models.Admins{}).Create(&adminPayload).Error
+		if err != nil {
+			return dto.GenericResponse{Success: false, Message: err.Error(), Data: nil}
+		}
 		// create user
 		userPayload := &models.Users{
 			Name:         payload.Name,

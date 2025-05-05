@@ -32,5 +32,7 @@ func main() {
 	routes.UserRoutes(api)
 	routes.AdminRoutes(api)
 	routes.ChurchRoutes(api)
+	routes.ChurchUserRoutes(api)
+	routes.ChurchFamilyRoutes(api)
 	log.Fatal(app.Listen(":" + port))
 }
