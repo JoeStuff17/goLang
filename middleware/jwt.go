@@ -9,8 +9,11 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
+
+	// "main.go/database"
 	"main.go/enums"
 	dto "main.go/interface_model"
+	// "main.go/models"
 )
 
 func JWTMiddleware() fiber.Handler {
@@ -67,6 +70,15 @@ func JWTMiddleware() fiber.Handler {
 		idInt, _ := strconv.Atoi(idStr)
 		role, _ := claims["role"].(string)
 		name, _ := claims["name"].(string)
+
+		// var user models.Users
+		// err = database.DBSql.First(&user, "id = ? AND role = ?", idInt, role).Error
+		// if err != nil {
+		// 	return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+		// 		"success": false,
+		// 		"message": "Unauthorized: User no longer exists",
+		// 	})
+		// }
 
 		c.Locals("user", dto.ReqUser{
 			ID:   uint(idInt),

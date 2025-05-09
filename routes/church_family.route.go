@@ -7,8 +7,7 @@ import (
 	"main.go/middleware"
 )
 
-func ChurchRoutes(routers fiber.Router) {
-	r := routers.Group("church", middleware.JWTMiddleware())
-	r.Post("/create", middleware.RequireRoles(enums.RoleSuperAdmin, enums.RoleAdmin), church_c.CreateChurch)
+func ChurchFamilyRoutes(routers fiber.Router) {
+	r := routers.Group("church-family", middleware.JWTMiddleware())
 	r.Get("/fetch-all", middleware.RequireRoles(enums.RoleSuperAdmin, enums.RoleAdmin), church_c.FetchChurches)
 }

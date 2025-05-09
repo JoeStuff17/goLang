@@ -39,6 +39,9 @@ func CreateAdmin(payload models.Admins, localUser dto.ReqUser) dto.GenericRespon
 			UUID:         newUUID,
 		}
 		err := database.DBSql.Model(&models.Admins{}).Create(&adminPayload).Error
+		if err != nil {
+			return dto.GenericResponse{Success: false, Message: err.Error(), Data: nil}
+		}
 		// create user
 		userPayload := &models.Users{
 			Name:         payload.Name,
@@ -116,4 +119,14 @@ func FetchAdminById(admin_id int) dto.GenericResponse {
 		return dto.GenericResponse{Success: true, Data: nil, Message: "No records found", StatusCode: fiber.StatusOK}
 	}
 	return dto.GenericResponse{Success: true, Message: "Admin retrieved successfully", Data: admin, StatusCode: fiber.StatusOK}
+}
+
+func UpdateAdminMenu(payload *dto.UpdateAdminMenuPayload) dto.GenericResponse {
+	var adminCount int64
+	database.DBSql.Model(&models.Admins{}).Where("id = ?", payload.ID).Count(&adminCount)
+	if adminCount == 0 {
+		return dto.GenericResponse{Success: false, Data: nil, Message: "Admin is not active", StatusCode: fiber.StatusBadRequest}
+	}
+	database.DBSql.Model(&models.Admins{}).Where("id =?", payload.ID).Updates(models.Admins{Menu: payload.Data.Menu})
+	return dto.GenericResponse{Success: true, Data: fiber.Map{}, Message: "Fetched successfully", StatusCode: fiber.StatusOK}
 }
