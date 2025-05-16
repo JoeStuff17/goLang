@@ -1,4 +1,4 @@
-package church_user_s
+package church_family_s
 
 import (
 	"encoding/json"
@@ -55,26 +55,26 @@ func GenerateRandomString(length int) string {
 	return string(b)
 }
 
-func GetAllChurchUsers(church_id int) dto.ResWithCount {
-	var members []models.Churches
-	err := database.DBSql.Where("church_id = ?", church_id).Find(&members).Error
+func GetAllChurchFamilies(church_id int) dto.ResWithCount {
+	var families []models.ChurchFamily
+	err := database.DBSql.Where("church_id = ? AND is_active = ?", church_id, true).Find(&families).Error
 	if err != nil {
 		return dto.ResWithCount{Success: false, Message: err.Error(), Data: []map[string]interface{}{}, Count: 0,
 			StatusCode: fiber.StatusNoContent,
 		}
 	}
-	message := "No members found"
-	if len(members) > 0 {
-		message = "Members fetched successfully"
+	message := "Family details not found"
+	if len(families) > 0 {
+		message = "families fetched successfully"
 	}
-	return dto.ResWithCount{Success: true, Message: message, Data: &members, Count: len(members), StatusCode: fiber.StatusOK}
+	return dto.ResWithCount{Success: true, Message: message, Data: &families, Count: len(families), StatusCode: fiber.StatusOK}
 }
 
-func FetchChurchUserById(church_id int, user_id int) dto.GenericResponse {
-	var user *models.ChurchUser
-	result := database.DBSql.Where("church_id = ? AND id = ? AND is_active = ?", church_id, user_id, true).Find(&user)
+func FetchChurchFamilyById(church_id int, family_id int) dto.GenericResponse {
+	var family *models.ChurchFamily
+	result := database.DBSql.Where("church_id = ? AND id = ? AND is_active = ?", church_id, family_id, true).Find(&family)
 	if result.RowsAffected == 0 {
-		return dto.GenericResponse{Success: true, Data: nil, Message: "No records found", StatusCode: fiber.StatusOK}
+		return dto.GenericResponse{Success: true, Data: nil, Message: "Family details not found", StatusCode: fiber.StatusOK}
 	}
-	return dto.GenericResponse{Success: true, Message: "User retrieved successfully", Data: user, StatusCode: fiber.StatusOK}
+	return dto.GenericResponse{Success: true, Message: "family retrieved successfully", Data: family, StatusCode: fiber.StatusOK}
 }

@@ -13,7 +13,7 @@ import (
 const TableNameChurchUsers = "church_users"
 
 type ChurchUser struct {
-	ChurchId       string                  `gorm:"column:church_id; type:varchar(20); not null" json:"church_id"`
+	ChurchId       int                     `gorm:"column:church_id; type:varchar(20); not null" json:"church_id"`
 	Name           string                  `gorm:"column:name; type:varchar(255);not null" json:"name"`
 	MobileNumber   string                  `gorm:"column:mobile_number; type:varchar(10);" json:"mobile_number"`
 	Email          *string                 `gorm:"column:email; type:varchar(150);" json:"email"`

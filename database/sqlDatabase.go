@@ -50,6 +50,7 @@ func ConnectToMySql() {
 			&models.Churches{},
 			&models.ChurchUser{},
 			&models.ChurchFamily{},
+			&models.Offerings{},
 		)
 		if err != nil {
 			fmt.Println("DB Migrations error, aborting...")

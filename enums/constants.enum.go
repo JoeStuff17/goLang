@@ -7,6 +7,8 @@ type ChurchDesignation string
 type Gender string
 type MaritalStatus string
 type Professions string
+type PaymentMethod string
+type PaymentPurpose string
 
 func (u UserRole) String() {
 	panic("unimplemented")
@@ -71,4 +73,27 @@ const (
 	ProfessionRetired            Professions = "retired"
 	ProfessionSelfEmployed       Professions = "self_employed"
 	ProfessionHomemaker          Professions = "homemaker"
+)
+
+const (
+	PaymentMethodCash         PaymentMethod = "cash"
+	PaymentMethodOnline       PaymentMethod = "online"
+	PaymentMethodBankTransfer PaymentMethod = "bank_transfer"
+	PaymentMethodCheque       PaymentMethod = "cheque"
+)
+
+const (
+	PaymentPurposeTithe            PaymentPurpose = "tithe"
+	PaymentPurposeOffering         PaymentPurpose = "offering"
+	PaymentPurposeDonation         PaymentPurpose = "donation"
+	PaymentPurposeBuildingFund     PaymentPurpose = "building_fund"
+	PaymentPurposeThanksgiving     PaymentPurpose = "thanksgiving"
+	PaymentPurposeVBS              PaymentPurpose = "vbs"
+	PaymentPurposeSundaySchool     PaymentPurpose = "sunday_school"
+	PaymentPurposeYouthFellowship  PaymentPurpose = "youth_fellowship"
+	PaymentPurposeWomenFellowship  PaymentPurpose = "women_fellowship"
+	PaymentPurposeMenFellowship    PaymentPurpose = "men_fellowship"
+	PaymentPurposeAuction          PaymentPurpose = "auction"
+	PaymentPurposeEvangelisticFund PaymentPurpose = "evangelistic_fund"
+	PaymentPurposeIMM              PaymentPurpose = "imm"
 )
