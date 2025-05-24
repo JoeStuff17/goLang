@@ -9,6 +9,7 @@ type MaritalStatus string
 type Professions string
 type PaymentMethod string
 type PaymentPurpose string
+type Months int
 
 func (u UserRole) String() {
 	panic("unimplemented")
@@ -96,4 +97,19 @@ const (
 	PaymentPurposeAuction          PaymentPurpose = "auction"
 	PaymentPurposeEvangelisticFund PaymentPurpose = "evangelistic_fund"
 	PaymentPurposeIMM              PaymentPurpose = "imm"
+)
+
+const (
+	January   Months = 1
+	February  Months = 2
+	March     Months = 3
+	April     Months = 4
+	May       Months = 5
+	June      Months = 6
+	July      Months = 7
+	August    Months = 8
+	September Months = 9
+	October   Months = 10
+	November  Months = 11
+	December  Months = 12
 )

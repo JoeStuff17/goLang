@@ -1,8 +1,6 @@
 package user_c
 
 import (
-	"fmt"
-
 	"github.com/gofiber/fiber/v2"
 
 	"main.go/helpers"
@@ -13,7 +11,6 @@ import (
 
 func CreateUser(c *fiber.Ctx) error {
 	var payload models.Users
-	fmt.Println("payload------>", payload)
 	if err := c.BodyParser(&payload); err != nil {
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
 			"success": false,
@@ -29,28 +26,28 @@ func CreateUser(c *fiber.Ctx) error {
 	}
 }
 
-func AdminSendOtp(c *fiber.Ctx) error {
-	payload := new(dto.AdminSendOtpPayload)
+func SendOtp(c *fiber.Ctx) error {
+	payload := new(dto.SendOtpPayload)
 	if err := c.BodyParser(payload); err != nil {
 		return err
 	}
 
-	res := user_s.AdminSendOtp(payload)
+	res := user_s.SendOtp(payload)
 	return c.Status(res.StatusCode).JSON(fiber.Map{"success": res.Success, "data": res.Data, "message": res.Message})
 }
 
-func AdminVerifyOtp(c *fiber.Ctx) error {
-	payload := new(dto.AdminVerifyOtpPayload)
+func VerifyOtp(c *fiber.Ctx) error {
+	payload := new(dto.VerifyOtpPayload)
 	if err := c.BodyParser(payload); err != nil {
 		return err
 	}
 
-	res := user_s.AdminVerifyOtp(payload)
+	res := user_s.VerifyOtp(payload)
 	return c.Status(res.StatusCode).JSON(fiber.Map{"success": res.Success, "data": res.Data, "message": res.Message})
 }
 
 func MailSendTest(c *fiber.Ctx) error {
-	payload := new(dto.AdminVerifyOtpPayload)
+	payload := new(dto.VerifyOtpPayload)
 	if err := c.BodyParser(payload); err != nil {
 		return err
 	}

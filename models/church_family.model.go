@@ -8,7 +8,7 @@ import (
 const TableNameChurchFamilies = "church_families"
 
 type ChurchFamily struct {
-	ChurchId       string         `gorm:"column:church_id; type:varchar(20); not null" json:"church_id"`
+	ChurchId       int            `gorm:"column:church_id; not null" json:"church_id"`
 	FamilyName     string         `gorm:"column:family_name; type:varchar(255);not null" json:"family_name"`
 	MemberIds      datatypes.JSON `gorm:"column:member_ids; type:text" json:"member_ids"`
 	TotalMembers   int            `gorm:"column:total_members; type:int; not null" json:"total_members"`
