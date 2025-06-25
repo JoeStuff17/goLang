@@ -2,23 +2,16 @@ package church_s
 
 import (
 	"encoding/json"
-	"fmt"
-	"strconv"
-	"time"
 
-	"github.com/google/uuid"
+	"github.com/gofiber/fiber/v2"
 	"gorm.io/datatypes"
 	"main.go/database"
 	"main.go/helpers"
 	dto "main.go/interface_model"
 	"main.go/models"
-	sql "main.go/models"
 )
 
-func CreateChurch(payload sql.Churches, localUser dto.ReqUser) dto.GenericResponse {
-	newUUID := uuid.New().String()
-	payload.Uuid = newUUID
-
+func CreateChurch(payload *models.Churches, localUser dto.ReqUser) dto.GenericResponse {
 	createdBy := dto.CreatedBy{
 		Id:   localUser.ID,
 		Name: localUser.Name,
@@ -27,66 +20,55 @@ func CreateChurch(payload sql.Churches, localUser dto.ReqUser) dto.GenericRespon
 	createdByJSON, err := json.Marshal(createdBy)
 	if err != nil {
 		return dto.GenericResponse{
-			Success: false,
-			Data:    err.Error(),
-			Message: "Failed to serialize CreatedBy",
+			Success:    false,
+			Message:    "Failed to serialize CreatedBy",
+			Data:       err.Error(),
+			StatusCode: fiber.StatusUnprocessableEntity,
 		}
 	}
 	payload.CreatedBy = datatypes.JSON(createdByJSON)
-
-	dbWithRetry := helpers.NewDBWithRetry(database.DBSql)
-	err = dbWithRetry.CreateWithDynamicGenerator(&payload, func() error {
-		// regenerate church code inside retry
-		newCode, codeErr := GenerateNewChurchCode()
-		if codeErr != nil {
-			return codeErr
-		}
-		// here update the pointer payload correctly
-		payload.ChurchCode = newCode
-		return nil
+	dbRetry := helpers.NewDBWithRetry(database.DBSql)
+	err = dbRetry.CreateWithDynamicGenerator(payload, func() error {
+		return payload.BeforeCreate(database.DBSql)
 	})
-
 	if err != nil {
 		return dto.GenericResponse{
-			Success: false,
-			Data:    err.Error(),
-			Message: "Failed to create church",
+			Success:    false,
+			Message:    "Failed to create church",
+			Data:       err.Error(),
+			StatusCode: fiber.StatusInternalServerError,
 		}
 	}
 
 	return dto.GenericResponse{
-		Success: true,
-		Message: "Church created successfully",
-		Data:    payload,
+		Success:    true,
+		Message:    "Church created successfully",
+		Data:       &payload,
+		StatusCode: fiber.StatusOK,
 	}
 }
 
-func GenerateNewChurchCode() (string, error) {
-	var lastChurchCode string
-	err := database.DBSql.Model(&models.Churches{}).
-		Select("church_code").
-		Where("SUBSTRING(church_code, 3, 2) = ?", time.Now().Format("06")).
-		Order("church_code DESC").
-		Limit(1).
-		Pluck("church_code", &lastChurchCode).Error
+func GetAllChurches() dto.ResWithCount {
+	var churches []models.Churches
+	err := database.DBSql.Model(&models.Churches{}).Find(&churches).Error
 	if err != nil {
-		return "", err
+		return dto.ResWithCount{
+			Success:    false,
+			Message:    err.Error(),
+			Data:       []map[string]interface{}{},
+			Count:      0,
+			StatusCode: fiber.StatusNoContent,
+		}
 	}
-
-	codePrefix := "CH"
-	yearSuffix := time.Now().Format("06")
-
-	if lastChurchCode == "" {
-		return fmt.Sprintf("%s%s001", codePrefix, yearSuffix), nil
+	message := "No churches found"
+	if len(churches) > 0 {
+		message = "Churches fetched successfully"
 	}
-
-	lastNumericPart := lastChurchCode[len(codePrefix)+2:]
-	lastNumber, err := strconv.Atoi(lastNumericPart)
-	if err != nil {
-		return "", err
+	return dto.ResWithCount{
+		Success:    true,
+		Message:    message,
+		Data:       &churches,
+		Count:      len(churches),
+		StatusCode: fiber.StatusOK,
 	}
-
-	newNumber := lastNumber + 1
-	newChurchCode := fmt.Sprintf("%s%s%03d", codePrefix, yearSuffix, newNumber)
-	return newChurchCode, nil
 }

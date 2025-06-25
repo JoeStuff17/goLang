@@ -13,7 +13,7 @@ const TableNameUsers = "users"
 
 type Users struct {
 	Name          string         `gorm:"column:name; type:varchar(100); NOT NULL" json:"name"`
-	Role          enums.UserRole `gorm:"column:role;type:enum('super_admin','admin','client','client_admin','client_user'); DEFAULT: 'admin'" json:"role"`
+	Role          enums.UserRole `gorm:"column:role;type:enum('super_admin','admin','church','church_admin','church_user'); DEFAULT: 'admin'" json:"role"`
 	MobileNumber  string         `gorm:"column:mobile_number; type:varchar(10);" json:"mobile_number"`
 	Email         *string        `gorm:"column:email; type:varchar(150);" json:"email"`
 	OTP           int            `gorm:"column:otp; type:varchar(6);" json:"otp"`

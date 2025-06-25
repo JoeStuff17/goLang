@@ -36,3 +36,17 @@ func FetchAdminById(c *fiber.Ctx) error {
 	return c.Status(res.StatusCode).JSON(fiber.Map{"success": res.Success, "message": res.Message, "data": res.Data})
 
 }
+
+func UpdateAdminMenu(c *fiber.Ctx) error {
+	var payload dto.UpdateAdminMenuPayload
+	if err := c.BodyParser(&payload); err != nil {
+		return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
+			"success": false,
+			"message": "Not able to process the request",
+			"data":    err,
+		})
+	}
+	res := admin_s.UpdateAdminMenu(&payload)
+	return c.Status(res.StatusCode).JSON(fiber.Map{"success": res.Success, "message": res.Message, "data": res.Data})
+
+}
